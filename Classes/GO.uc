@@ -32,8 +32,6 @@ function PreBeginPlay()
 {
     `log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Entered PreBeginPlay");
 
-    WorldInfo.TWApplyTweaks();
-
     Super(FrameworkGame).PreBeginPlay();
 
     ObjMyKFGRI = ObjKFGameReplicationInfo(GameReplicationInfo);

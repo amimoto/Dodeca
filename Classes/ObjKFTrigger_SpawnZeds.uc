@@ -202,7 +202,6 @@ defaultproperties
         BlockZeroExtent=false
     End Object
 
-    OneShot = false
     Triggered = false
 }
 
