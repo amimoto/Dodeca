@@ -17,7 +17,7 @@ simulated function Projectile ProjectileFire()
 {
     local vector        StartTrace, RealStartLoc, AimDir;
     // local vector EndTrace;
-    local ImpactInfo    TestImpact;
+    //local ImpactInfo    TestImpact;
     local Projectile    SpawnedProjectile;
 
     if( Role == ROLE_Authority )
