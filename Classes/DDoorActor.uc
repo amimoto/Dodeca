@@ -160,7 +160,7 @@ defaultproperties
     InvulnerableWhileLocked = false;
 
     // UI
-    LockedIcon=Texture2D'Teriyakisaurus.locked_icon'
+    LockedIcon=Texture2D'Dodeca_UI.locked_icon'
     LockedIconSize=32
 }
 

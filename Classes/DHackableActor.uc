@@ -122,8 +122,7 @@ defaultproperties
 
     // UI
     // Risk Skull from: http://www.flaticon.com/free-icon/risk-skull_71270#term=skull&page=1&position=15
-    HackedIcon=Texture2D'Teriyakisaurus.hackable_icon'
-    //HackedIcon=Texture2D'Teriyakisaurus.hacked_icon'
+    HackedIcon=Texture2D'Dodeca_UI.hackable_icon'
     HackedIconSize = 40
     HackedIntegrityString="Hacked"
     HackedFontScale = 2

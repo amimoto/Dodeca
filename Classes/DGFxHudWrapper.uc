@@ -1,0 +1,1 @@
+class DKFGFxHudWrapper extends KFGFxHudWrapper;

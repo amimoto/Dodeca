@@ -1,4 +1,4 @@
-class ObjKFPlayerController extends KFGame.KFPlayerController;
+class DKFPlayerController extends KFGame.KFPlayerController;
 
 var ObjKFGFxMoviePlayer_HUD ObjMyGFxHud;
 
