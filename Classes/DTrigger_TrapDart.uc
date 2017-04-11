@@ -1,4 +1,4 @@
-class ObjKFTrigger_TrapDart extends Trigger_PawnsOnly;
+class DTrigger_TrapDart extends Trigger_PawnsOnly;
 
 /** reference to actor to play open/close animations */
 var() SkeletalMeshActor TrapMeshActor;
@@ -51,7 +51,7 @@ event Touch(Actor Other, PrimitiveComponent OtherComp, vector HitLocation, vecto
     local Pawn P;
     local PlayerController PC;
 
-    `log("ObjKFTrapTrigger_Dart::Touch!");
+    `log("DTrapTrigger_Dart::Touch!");
     Super.Touch(Other, OtherComp, HitLocation, HitNormal);
 
     P = Pawn(Other);
@@ -74,7 +74,7 @@ event Touch(Actor Other, PrimitiveComponent OtherComp, vector HitLocation, vecto
 /** HUD */
 event UnTouch(Actor Other)
 {
-    `log("ObjKFTrapTrigger_Dart::UnTouch!");
+    `log("DTrapTrigger_Dart::UnTouch!");
     super.UnTouch( Other );
     class'KFPlayerController'.static.UpdateInteractionMessages( Other );
 }

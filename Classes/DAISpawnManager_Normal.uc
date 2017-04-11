@@ -1,4 +1,4 @@
-class ObjKFAISpawnManager_Normal extends ObjKFAISpawnManager;
+class DAISpawnManager_Normal extends DAISpawnManager;
 
 DefaultProperties
 {

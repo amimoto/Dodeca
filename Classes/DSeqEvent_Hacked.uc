@@ -1,4 +1,4 @@
-class ObjSeqEvent_Hacked extends SequenceEvent;
+class DSeqEvent_Hacked extends SequenceEvent;
 
 defaultproperties
 {
@@ -8,5 +8,5 @@ defaultproperties
     OutputLinks(0)=(LinkDesc="Hacked")
 
     ObjName = "Hacked"
-    ObjCategory="Objectives"
+    ObjCategory="Dodeca"
 }

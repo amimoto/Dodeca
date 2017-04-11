@@ -1,10 +1,10 @@
-class ObjSeqEvent_Unlock extends SequenceEvent;
+class DSeqEvent_Unlock extends SequenceEvent;
 
-var array<ObjKFDoorActor> MyDoors;
+var array<DDoorActor> MyDoors;
 
 event Activated()
 {
-    local ObjKFDoorActor MyDoor;
+    local DDoorActor MyDoor;
     foreach MyDoors(MyDoor)
     {
         MyDoor.Unlock();
@@ -25,6 +25,6 @@ defaultproperties
     OutputLinks(0)=(LinkDesc="Unlocked")
 
     ObjName = "Unlock"
-    ObjCategory="Objectives"
+    ObjCategory="Dodeca"
 }
 

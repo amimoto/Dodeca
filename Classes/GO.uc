@@ -1,10 +1,10 @@
 class GO extends KFGameInfo_Survival;
 
 // My replacement KFGRI
-var ObjKFGameReplicationInfo   ObjMyKFGRI;
+var DGameReplicationInfo   DMyKFGRI;
 
 // Keep track of the wave specific traders
-var array<ObjKFTraderTrigger>   ObjTraderList;
+var array<DTraderTrigger>   DTraderList;
 
 // If this is on, we don't have a break for Trader
 var config bool NoTraderBreak;
@@ -13,29 +13,27 @@ var config bool NoTraderBreak;
 // standard form but also in the wave targeted versions.
 function InitTraderList()
 {
-    local ObjKFTraderTrigger MyTrader;
+    local DTraderTrigger MyTrader;
 
     super.InitTraderList();
 
-    ObjTraderList.Remove(0, ObjTraderList.Length);
-    ObjMyKFGRI.ObjTraderList.Remove(0, ObjTraderList.Length);
-    foreach DynamicActors(class'ObjKFTraderTrigger', MyTrader)
+    DTraderList.Remove(0, DTraderList.Length);
+    DMyKFGRI.DTraderList.Remove(0, DTraderList.Length);
+    foreach DynamicActors(class'DTraderTrigger', MyTrader)
     {
-        `log("++++++++++++++++++++++++++++++++++++++++++++++++ Found a new ObjKFTraderTrigger");
-        ObjTraderList.AddItem(MyTrader);
-        ObjMyKFGRI.ObjTraderList.AddItem(MyTrader);
+        DTraderList.AddItem(MyTrader);
+        DMyKFGRI.DTraderList.AddItem(MyTrader);
     }
 }
 
+// This scans all the door actors on this map to 
 
 function PreBeginPlay()
 {
-    `log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Entered PreBeginPlay");
-
     Super(FrameworkGame).PreBeginPlay();
 
-    ObjMyKFGRI = ObjKFGameReplicationInfo(GameReplicationInfo);
-    MyKFGRI = ObjMyKFGRI;
+    DMyKFGRI = DGameReplicationInfo(GameReplicationInfo);
+    MyKFGRI = DMyKFGRI;
     InitGRIVariables();
 
     CreateTeam(0);
@@ -56,7 +54,7 @@ function PreBeginPlay()
     InitSpawnManager();
     UpdateGameSettings();
 
-    `log("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Done PreBeginPlay");
+    `log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> YAY!");
 }
 
 
@@ -64,11 +62,10 @@ State PlayingWave
 {
     function BeginState( Name PreviousStateName )
     {
-        `log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! PlayingWave!");
         MyKFGRI.SetWaveActive(TRUE, GetGameIntensityForMusic());
         StartWave();
 
-        ObjMyKFGRI.OpenWaveTraders();
+        DMyKFGRI.OpenWaveTraders();
 
 
         if ( AllowBalanceLogging() )
@@ -86,13 +83,12 @@ State PlayingWave
 
 defaultproperties
 {
+    PlayerControllerClass = class'Dodeca.DPlayerController'
+    GameReplicationInfoClass = class'Dodeca.DGameReplicationInfo'
+    GameConductorClass = class'Dodeca.DGameConductor'
+    HUDType=class'Dodeca.DGFxHudWrapper'
 
-    PlayerControllerClass = class'Objectives.ObjKFPlayerController'
-    GameReplicationInfoClass = class'Objectives.ObjKFGameReplicationInfo'
-    GameConductorClass = class'Objectives.ObjKFGameConductor'
-
-    SpawnManagerClasses(0)=class'Objectives.ObjKFAISpawnManager_Short'
-    SpawnManagerClasses(1)=class'Objectives.ObjKFAISpawnManager_Normal'
-    SpawnManagerClasses(2)=class'Objectives.ObjKFAISpawnManager_Long'
-
+    SpawnManagerClasses(0)=class'Dodeca.DAISpawnManager_Short'
+    SpawnManagerClasses(1)=class'Dodeca.DAISpawnManager_Normal'
+    SpawnManagerClasses(2)=class'Dodeca.DAISpawnManager_Long'
 }

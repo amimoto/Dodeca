@@ -1,4 +1,4 @@
-class ObjKFTraderDialogManager extends KFTraderDialogManager;
+class DTraderDialogManager extends KFTraderDialogManager;
 
 
 simulated function PlayDialog( int EventID, Controller C )

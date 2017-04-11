@@ -1,4 +1,4 @@
-class ObjKFDoorActor extends KFDoorActor;
+class DDoorActor extends KFDoorActor;
 
 /* There's some funny business that must be done to play with the
    AI so that it thinks that the door is locked shut. By setting

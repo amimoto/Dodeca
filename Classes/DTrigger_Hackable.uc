@@ -1,8 +1,8 @@
-class ObjKFTrigger_Hackable extends Trigger_PawnsOnly
+class DTrigger_Hackable extends Trigger_PawnsOnly
     implements(KFInterface_Usable);
 
 // Hackable Actor Object
-var() ObjHackableActor Hackable;
+var() DHackableActor Hackable;
 
 // What the current hack amount is
 var() int HackPercentage;
@@ -75,7 +75,7 @@ simulated event Touch(Actor Other,
     Super.Touch(Other, OtherComp, HitLocation, HitNormal);
     if (Role == ROLE_Authority)
     {
-        class'ObjKFPlayerController'.static.UpdateInteractionMessages(Other);
+        class'DPlayerController'.static.UpdateInteractionMessages(Other);
     }
 }
 
@@ -86,7 +86,7 @@ simulated event UnTouch(Actor Other)
     SetHackablePostRender(false);
     if (Role == ROLE_Authority)
     {
-        class'ObjKFPlayerController'.static.UpdateInteractionMessages(Other);
+        class'DPlayerController'.static.UpdateInteractionMessages(Other);
     }
 }
 
@@ -147,17 +147,17 @@ function TimerHacking()
 function EmitHacked()
 {
     local array<SequenceObject> HackedEvents;
-    local ObjSeqEvent_Hacked HackedEvent;
+    local DSeqEvent_Hacked HackedEvent;
     local Sequence GameSeq;
     local int i;
 
     GameSeq = WorldInfo.GetGameSequence();
     if ( GameSeq != None )
     {
-        GameSeq.FindSeqObjectsByClass( class'ObjSeqEvent_Hacked', true, HackedEvents );
+        GameSeq.FindSeqObjectsByClass( class'DSeqEvent_Hacked', true, HackedEvents );
         for ( i=0; i<HackedEvents.Length; i++ )
         {
-            HackedEvent = ObjSeqEvent_Hacked(HackedEvents[i]);
+            HackedEvent = DSeqEvent_Hacked(HackedEvents[i]);
             if (HackedEvent != None)
             {
                 HackedEvent.Reset();
@@ -171,17 +171,17 @@ function EmitHacked()
 function EmitUse()
 {
     local array<SequenceObject> UseConsoleEvents;
-    local ObjSeqEvent_UseConsole UseConsoleEvent;
+    local DSeqEvent_UseConsole UseConsoleEvent;
     local Sequence GameSeq;
     local int i;
 
     GameSeq = WorldInfo.GetGameSequence();
     if ( GameSeq != None )
     {
-        GameSeq.FindSeqObjectsByClass( class'ObjSeqEvent_UseConsole', true, UseConsoleEvents );
+        GameSeq.FindSeqObjectsByClass( class'DSeqEvent_UseConsole', true, UseConsoleEvents );
         for ( i=0; i<UseConsoleEvents.Length; i++ )
         {
-            UseConsoleEvent = ObjSeqEvent_UseConsole(UseConsoleEvents[i]);
+            UseConsoleEvent = DSeqEvent_UseConsole(UseConsoleEvents[i]);
             if (UseConsoleEvent != None)
             {
                 UseConsoleEvent.Reset();
@@ -204,8 +204,8 @@ defaultproperties
     HackRate = 1
     HackState = HACK_Untouched
 
-    SupportedEvents.Add(class'ObjSeqEvent_Hacked')
-    SupportedEvents.Add(class'ObjSeqEvent_UseConsole')
+    SupportedEvents.Add(class'DSeqEvent_Hacked')
+    SupportedEvents.Add(class'DSeqEvent_UseConsole')
 
     UsableAfterHack = true
 }

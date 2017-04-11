@@ -1,4 +1,4 @@
-class ObjHackableActor extends Actor
+class DHackableActor extends Actor
     placeable;
 
 /** Amount of damage a welded door can take */

@@ -1,4 +1,4 @@
-class ObjKFGameConductor extends KFGameConductor;
+class DGameConductor extends KFGameConductor;
 
 
 function Initialize()

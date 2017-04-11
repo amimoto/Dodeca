@@ -1,25 +1,25 @@
-class ObjKFLocalMessage_Interaction extends KFLocalMessage_Interaction;
+class DLocalMessage_Interaction extends KFLocalMessage_Interaction;
 
 
-enum ObjEInteractionMessageType {
-        ObjIMT_None,
+enum DEInteractionMessageType {
+        DIMT_None,
 
         // usables messaging (should always be lowest "priority")
-        ObjIMT_AcceptObjective,
-        ObjIMT_ReceiveAmmo,
-        ObjIMT_ReceiveGrenades,
-        ObjIMT_UseTrader,
-        ObjIMT_UseDoor,
-        ObjIMT_UseDoorWelded,
-        ObjIMT_RepairDoor,
-        ObjIMT_UseMinigame,
-        ObjIMT_UseMinigameGenerator,
+        DIMT_AcceptObjective,
+        DIMT_ReceiveAmmo,
+        DIMT_ReceiveGrenades,
+        DIMT_UseTrader,
+        DIMT_UseDoor,
+        DIMT_UseDoorWelded,
+        DIMT_RepairDoor,
+        DIMT_UseMinigame,
+        DIMT_UseMinigameGenerator,
 
         // conditional messaging
-        ObjIMT_GamepadWeaponSelectHint,
-        ObjIMT_HealSelfWarning,
-        ObjIMT_ClotGrabWarning,
-        ObjIMT_PlayerClotGrabWarning,
+        DIMT_GamepadWeaponSelectHint,
+        DIMT_HealSelfWarning,
+        DIMT_ClotGrabWarning,
+        DIMT_PlayerClotGrabWarning,
 
         IMT_PerformHack,
         IMT_DoorLocked,

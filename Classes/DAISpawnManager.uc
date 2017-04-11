@@ -1,3 +1,3 @@
-class ObjKFAISpawnManager extends KFAISpawnManager;
+class DAISpawnManager extends KFAISpawnManager;
 
 

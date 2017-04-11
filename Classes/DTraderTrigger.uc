@@ -1,4 +1,4 @@
-class ObjKFTraderTrigger extends KFTraderTrigger;
+class DTraderTrigger extends KFTraderTrigger;
 
 const TRADER_OPEN = 1;
 const TRADER_OPEN_DURING_WAVE = 2;

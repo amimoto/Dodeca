@@ -1,4 +1,4 @@
-class ObjSeqEvent_UseConsole extends SequenceEvent;
+class DSeqEvent_UseConsole extends SequenceEvent;
 
 defaultproperties
 {
@@ -7,5 +7,5 @@ defaultproperties
     OutputLinks(0)=(LinkDesc="UseConsole")
 
     ObjName = "UseConsole"
-    ObjCategory="Objectives"
+    ObjCategory="Dodeca"
 }

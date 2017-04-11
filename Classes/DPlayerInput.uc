@@ -1,4 +1,4 @@
-class ObjKFPlayerInput extends KFGame.KFPlayerInput;
+class DPlayerInput extends KFGame.KFPlayerInput;
 
 
 exec function InteractTimer()
@@ -14,10 +14,10 @@ exec function InteractTimer()
         {
             return;
         }
-        else if(UsableTrigger.IsA('ObjKFDoorTrigger'))
+        else if(UsableTrigger.IsA('DDoorTrigger'))
         {
             // Ignore if door is locked
-            if ( ObjKFDoorActor(ObjKFDoorTrigger(UsableTrigger).DoorActor).Locked )
+            if ( DDoorActor(DDoorTrigger(UsableTrigger).DoorActor).Locked )
             {
                 return;
             }

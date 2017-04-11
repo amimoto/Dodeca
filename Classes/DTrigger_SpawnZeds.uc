@@ -1,4 +1,4 @@
-class ObjKFTrigger_SpawnZeds extends Trigger_PawnsOnly;
+class DTrigger_SpawnZeds extends Trigger_PawnsOnly;
 
 struct StructSpawnTarget
 {
@@ -190,7 +190,6 @@ event Touch(Actor Other, PrimitiveComponent OtherComp, vector HitLocation, vecto
 
 event UnTouch(Actor Other)
 {
-    `log("ObjKTrigger_SpawnZeds::UnTouch!");
     super.UnTouch( Other );
 }
 

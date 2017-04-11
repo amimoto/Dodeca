@@ -1,11 +1,11 @@
-class DKFPlayerController extends KFGame.KFPlayerController;
+class DPlayerController extends KFGame.KFPlayerController;
 
-var ObjKFGFxMoviePlayer_HUD ObjMyGFxHud;
+var DGFxMoviePlayer_HUD DMyGFxHud;
 
 function SetGFxHUD( KFGFxMoviePlayer_HUD NewGFxHud )
 {
     `log("Setting the HUD to:"@NewGFxHud);
-    ObjMyGFxHud = ObjKFGFxMoviePlayer_HUD(NewGFxHud);
+    DMyGFxHud = DGFxMoviePlayer_HUD(NewGFxHud);
     Super.SetGFxHUD(NewGFxHud);
 }
 
@@ -14,8 +14,6 @@ static function UpdateInteractionMessages( Actor InteractingActor )
     local KFInterface_Usable UsableActor;
     local Pawn P;
     local PlayerController PC;
-
-    `log("Calling ObjUpdateInteractionMessages with " @ InteractingActor);
 
     P = Pawn(InteractingActor);
     if( P != none )
@@ -28,7 +26,7 @@ static function UpdateInteractionMessages( Actor InteractingActor )
             if( UsableActor != none )
             {
                 PC.SetTimer( 1.f, true, nameof(CheckCurrentUsableActor), PC );
-                PC.ReceiveLocalizedMessage( class'ObjKFLocalMessage_Interaction', UsableActor.GetInteractionIndex( P ) );
+                PC.ReceiveLocalizedMessage( class'DLocalMessage_Interaction', UsableActor.GetInteractionIndex( P ) );
             }
             else
             {
@@ -43,7 +41,7 @@ static function UpdateInteractionMessages( Actor InteractingActor )
 
 defaultproperties
 {
-    InputClass=class'Objectives.ObjKFPlayerInput'
+    InputClass=class'Dodeca.DPlayerInput'
 }
 
 

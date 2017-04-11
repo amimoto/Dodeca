@@ -1,10 +1,10 @@
-class ObjKFDoorTrigger extends KFDoorTrigger;
+class DDoorTrigger extends KFDoorTrigger;
 
 function int GetInteractionIndex( Pawn User )
 {
-    local ObjKFDoorActor MyDoor;
+    local DDoorActor MyDoor;
 
-    MyDoor = ObjKFDoorActor(DoorActor);
+    MyDoor = DDoorActor(DoorActor);
 
     if ( DoorActor.bIsDestroyed )
     {

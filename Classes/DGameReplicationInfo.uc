@@ -1,7 +1,24 @@
-class ObjKFGameReplicationInfo extends KFGameReplicationInfo;
+class DGameReplicationInfo extends KFGameReplicationInfo;
+
+// Key track of the keycard states on this map
+// Array is:
+// [
+//    int, # red keycard (0: not required on this map,
+//                        1: required but not possessed,
+//                        2: picked up by someone on team)
+//    int, # green keycard (same as red)
+//    int, # blue keycard (same as blue)
+// ]
+var int    KeyCardList[3];
 
 // Keep track of the wave specific traders
-var array<ObjKFTraderTrigger>   ObjTraderList;
+var array<DTraderTrigger>   DTraderList;
+
+replication
+{
+    if ( bNetDirty )
+        KeyCardList;
+}
 
 simulated function OpenTrader(optional int time)
 {
@@ -11,15 +28,15 @@ simulated function OpenTrader(optional int time)
 
 simulated function OpenWaveTraders()
 {
-    local ObjKFTraderTrigger Trader;
+    local DTraderTrigger Trader;
     local int i;
 
-    `log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Opening Wave Traders. There are "@ObjTraderList.Length@" Traders in list");
+    `log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Opening Wave Traders. There are "@DTraderList.Length@" Traders in list");
 
     // Open up All traders that should be open right now
-    for (i=0; i < ObjTraderList.Length; i++ )
+    for (i=0; i < DTraderList.Length; i++ )
     {
-        Trader = ObjTraderList[i];
+        Trader = DTraderList[i];
         if ( Trader.OpenDuringWave(WaveNum,WaveMax) )
         {
             if ( !Trader.bOpened ) Trader.OpenTrader();
@@ -37,5 +54,5 @@ simulated function CloseWaveTraders()
 
 defaultproperties
 {
-    TraderDialogManagerClass=class'Objectives.ObjKFTraderDialogManager'
+    TraderDialogManagerClass=class'Dodeca.DTraderDialogManager'
 }
