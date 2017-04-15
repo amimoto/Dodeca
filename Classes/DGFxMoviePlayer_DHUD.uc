@@ -3,8 +3,6 @@ class DGFxMoviePlayer_DHUD extends GFxMoviePlayer
 
 var GFxObject DGXHUDManager;
 
-var DGFxHUD_KeyCard KeyCardWidget;
-
 var DGFxHUD_PickupsWidget PickupsWidget;
 var DGFxHUD_IndicatorWidget IndicatorWidget;
 
@@ -88,25 +86,20 @@ event bool WidgetInitialized(name WidgetName, name WidgetPath, GFxObject Widget)
 
 function ShowDHUD(bool newShowDHUD)
 {
-    if (KeyCardWidget != none)
-    {
-        //KeyCardWidget.SetOpen(newShowDHUD);
-        //DHUDWidget.bUpdateDHUD = newShowDHUD;
-    }
 }
 
 function TickHud(float DeltaTime)
 {
+/*
     if (KeyCardWidget != none)
     {
         KeyCardWidget.TickHUD(DeltaTime);
     }
-
+*/
 }
 
 defaultproperties
 {
-    WidgetBindings.Add((WidgetName="KeyCardWidget",WidgetClass=class'Dodeca.DGFxHUD_KeyCard'))
     WidgetBindings.Add((WidgetName="IndicatorWidget",WidgetClass=class'Dodeca.DGFxHUD_IndicatorWidget'))
     WidgetBindings.Add((WidgetName="PickupsWidget",WidgetClass=class'Dodeca.DGFxHUD_PickupsWidget'))
     MovieInfo=SwfMovie'Dodeca_UI.Widgets'

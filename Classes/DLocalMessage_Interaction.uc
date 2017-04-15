@@ -25,6 +25,10 @@ enum DEInteractionMessageType {
         IMT_DoorLocked,
         IMT_Hacking,
         IMT_UseConsole,
+
+        IMT_PerformActivity,
+        IMT_Activating,
+        IMT_UseMechanism,
 };
 
 
