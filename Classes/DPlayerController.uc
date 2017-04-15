@@ -7,6 +7,7 @@ function SetGFxHUD( KFGFxMoviePlayer_HUD NewGFxHud )
     `log("Setting the HUD to:"@NewGFxHud);
     DMyGFxHud = DGFxMoviePlayer_HUD(NewGFxHud);
     Super.SetGFxHUD(NewGFxHud);
+    DMyGFxHud.CreateDHUD();
 }
 
 static function UpdateInteractionMessages( Actor InteractingActor )

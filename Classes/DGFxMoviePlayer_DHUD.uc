@@ -2,7 +2,12 @@ class DGFxMoviePlayer_DHUD extends GFxMoviePlayer
     config(UI);
 
 var GFxObject DGXHUDManager;
+
 var DGFxHUD_KeyCard KeyCardWidget;
+
+var DGFxHUD_PickupsWidget PickupsWidget;
+var DGFxHUD_IndicatorWidget IndicatorWidget;
+
 var float HUDScale;
 
 function Init(optional LocalPlayer LocPlay)
@@ -55,13 +60,26 @@ event bool WidgetInitialized(name WidgetName, name WidgetPath, GFxObject Widget)
     `log("+++++++++++++++++++++++++++++++++++++++++++++++++ Initializing:"@WidgetName);
     switch (WidgetName)
     {
-        case ( 'KeyCardWidget' ):
-            if ( KeyCardWidget == none )
+
+        case ( 'IndicatorWidget' ):
+            if ( IndicatorWidget == none )
             {
                 SetWidgetPathBinding( Widget, WidgetPath );
-                KeyCardWidget = DGFxHUD_KeyCard( Widget );
-                KeyCardWidget.InitializeWidget();
+                IndicatorWidget = DGFxHUD_IndicatorWidget( Widget );
+                IndicatorWidget.InitializeWidget();
             }
+            break;
+
+        case ( 'PickupsWidget' ):
+            if ( PickupsWidget == none )
+            {
+                SetWidgetPathBinding( Widget, WidgetPath );
+                PickupsWidget = DGFxHUD_PickupsWidget( Widget );
+                PickupsWidget.InitializeWidget();
+            };
+            break;
+
+
         break;
     }
 
@@ -75,8 +93,6 @@ function ShowDHUD(bool newShowDHUD)
         //KeyCardWidget.SetOpen(newShowDHUD);
         //DHUDWidget.bUpdateDHUD = newShowDHUD;
     }
-
-    KeyCardWidget.SetKeycard(1,2);
 }
 
 function TickHud(float DeltaTime)
@@ -91,6 +107,8 @@ function TickHud(float DeltaTime)
 defaultproperties
 {
     WidgetBindings.Add((WidgetName="KeyCardWidget",WidgetClass=class'Dodeca.DGFxHUD_KeyCard'))
+    WidgetBindings.Add((WidgetName="IndicatorWidget",WidgetClass=class'Dodeca.DGFxHUD_IndicatorWidget'))
+    WidgetBindings.Add((WidgetName="PickupsWidget",WidgetClass=class'Dodeca.DGFxHUD_PickupsWidget'))
     MovieInfo=SwfMovie'Dodeca_UI.Widgets'
 
     Priority = 1
