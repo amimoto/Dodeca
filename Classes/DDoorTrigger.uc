@@ -30,3 +30,7 @@ function int GetInteractionIndex( Pawn User )
 }
 
 
+defaultproperties
+{
+    SupportedEvents.Add(class'DSeqEvent_Unlock')
+}

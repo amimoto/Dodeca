@@ -1,36 +1,49 @@
 class DTrigger_Mechanism extends Trigger_PawnsOnly
-    implements(KFInterface_Usable);
+implements(DInterface_Mechanism)
+;
 
 // Mechanism Actor Object
-var() DMechanismActor Mechanism;
+var() DActor_Mechanism Mechanism;
 
 // Whether we're active
 var() bool Active;
 
-// What the current hack amount is
-var() int ActivityPercentage;
-
-// How many points does the hack go up per tick
+// How many points does the activity go up per tick
 var() int ActivityRate;
 
-// Usable after hack?
+// Usable after completion?
 var() bool UsableAfterActivity;
 
-enum EnumActivityStates {
-    ACTIVITY_Untouched,
-    ACTIVITY_Started,
-    ACTIVITY_Complete
-};
+// Has this mechanism activated (enabled?)
+var() bool Activated;
 
-var int ActivityState;
-
-simulated function bool GetIsUsable( Pawn User )
+simulated function bool CanBeActivated( Pawn User )
 {
-    if ( ActivityState == ACTIVITY_Untouched )
+    if ( !Activated )
     {
         return true;
     }
-    else if ( ActivityState == ACTIVITY_Complete && UsableAfterActivity )
+    return false;
+}
+
+function string ActivationString()
+{
+    if ( Mechanism == none ) return "";
+    return Mechanism.ActivityInstructions;
+}
+
+function int ActivationPercentage()
+{
+    if ( Mechanism == none ) return 0;
+    return (
+        100 - 100 * Mechanism.ActivityIntegrity
+                  / Mechanism.MaxActivityIntegrity
+    );
+}
+
+simulated function bool GetIsUsable( Pawn User )
+{
+    if ( Activated && UsableAfterActivity )
     {
         return true;
     }
@@ -38,17 +51,6 @@ simulated function bool GetIsUsable( Pawn User )
     return false;
 }
 
-function int GetInteractionIndex( Pawn User )
-{
-    if ( ActivityState == ACTIVITY_Untouched )
-    {
-        return IMT_PerformActivity;
-    }
-    else
-    {
-        return IMT_UseMechanism;
-    }
-}
 
 function SetMechanismPostRender( bool bShowIcon )
 {
@@ -67,129 +69,58 @@ function SetMechanismPostRender( bool bShowIcon )
     }
 }
 
+function DoActivationWork()
+{
+    if ( Mechanism == None ) return;
+    Mechanism.TakeActivatingWork(ActivityRate);
+    if ( Mechanism.IsActivated() ) {
+        Activated = True;
+        EmitActivated();
+    }
+}
+
 simulated event Touch(Actor Other,
                         PrimitiveComponent OtherComp,
                         vector HitLocation,
                         vector HitNormal)
 {
     SetMechanismPostRender(true);
-
-    `log("ObjKTrigger_Mechanism::Touch!");
     Super.Touch(Other, OtherComp, HitLocation, HitNormal);
     if (Role == ROLE_Authority)
     {
-        class'DPlayerController'.static.UpdateInteractionMessages(Other);
+        class'DPlayerController'.static.UpdateMechanismMessages(Other);
     }
 }
 
 simulated event UnTouch(Actor Other)
 {
-    `log("ObjKTrigger_Mechanism::UnTouch!");
     super.UnTouch( Other );
     SetMechanismPostRender(false);
     if (Role == ROLE_Authority)
     {
-        class'DPlayerController'.static.UpdateInteractionMessages(Other);
+        class'DPlayerController'.static.UpdateMechanismMessages(Other);
     }
 }
 
-function bool UsedBy(Pawn User)
-{
-    local KFPawn_Human KFPH;
-    local KFPlayerController KFPC;
-
-    KFPH = KFPawn_Human(User);
-
-    if ( KFPH == none  )
-    {
-        return false;
-    }
-
-    KFPC = KFPlayerController(User.Controller);
-
-    if ( KFPC != none )
-    {
-        DoActivating(User);
-    }
-
-    return false;
-}
-
-/* We don't immediately Emit the hacked signal. We wait till the hacking is done 
+/* We don't immediately Emit the completion signal. We wait till the activity is done
    To do so, we setup a timer that ticks down */
 function DoActivating(Actor Other)
 {
-    if ( ActivityState == ACTIVITY_Untouched ) {
-        ActivityState = Activity_Started;
-        SetTimer(0.2,true,nameof(TimerActivating),self);
-    }
-    else if ( ActivityState == ACTIVITY_Complete )
+    if ( Activated )
     {
         EmitUse();
     }
 }
 
-function TimerActivating()
-{
-    if ( Mechanism == none ) {
-        ClearTimer(nameof(TimerActivating));
-        return;
-    };
-
-    // Mechanism.TakeActivatingDamage(ActivityRate);
-    if ( Mechanism.IsActivated() ) {
-        `log("Mechanism has been activated!");
-        ActivityState = ACTIVITY_Complete;
-        ClearTimer(nameof(TimerActivating));
-        EmitActivated();
-    }
-}
-
 function EmitActivated()
 {
-    local array<SequenceObject> ActivatedEvents;
-    local DSeqEvent_ActivatedMechanism ActivatedEvent;
-    local Sequence GameSeq;
-    local int i;
-
-    GameSeq = WorldInfo.GetGameSequence();
-    if ( GameSeq != None )
-    {
-        GameSeq.FindSeqObjectsByClass( class'DSeqEvent_ActivatedMechanism', true, ActivatedEvents );
-        for ( i=0; i<ActivatedEvents.Length; i++ )
-        {
-            ActivatedEvent = DSeqEvent_ActivatedMechanism(ActivatedEvents[i]);
-            if (ActivatedEvent != None)
-            {
-                ActivatedEvent.Reset();
-                ActivatedEvent.CheckActivate(self,self);
-            }
-        }
-    }
+    self.TriggerEventClass(class'DSeqEvent_ActivatedMechanism',self,-1);
 }
 
 
 function EmitUse()
 {
-    local array<SequenceObject> UseConsoleEvents;
-    local DSeqEvent_UseConsole UseConsoleEvent;
-    local Sequence GameSeq;
-    local int i;
-
-    GameSeq = WorldInfo.GetGameSequence();
-    if ( GameSeq != None )
-    {
-        GameSeq.FindSeqObjectsByClass( class'DSeqEvent_UseMechanism', true, UseConsoleEvents );
-        for ( i=0; i<UseConsoleEvents.Length; i++ )
-        {
-            UseConsoleEvent = DSeqEvent_UseConsole(UseConsoleEvents[i]);
-            if (UseConsoleEvent != None)
-            {
-                UseConsoleEvent.Reset();
-                UseConsoleEvent.CheckActivate(self,self);
-            }
-        }
-    }
+    self.TriggerEventClass(class'DSeqEvent_UseMechanism',self,-1);
 }
 
 
@@ -202,12 +133,9 @@ defaultproperties
     End Object
 
     Active = True
+    Activated = False
 
-
-
-    ActivityPercentage = 0
     ActivityRate = 1
-    ActivityState = ACTIVITY_Untouched
 
     SupportedEvents.Add(class'DSeqEvent_ActivatedMechanism')
     SupportedEvents.Add(class'DSeqEvent_UseMechanism')

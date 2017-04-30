@@ -6,6 +6,11 @@ class DDoorActor extends KFDoorActor;
    natually perform attacks on the door.
 */
 
+enum DInteractionColours {
+    DIC_Red,
+    DIC_Green,
+    DIC_Blue,
+};
 
 /** UI icon used for lock */
 var protected Texture2D LockedIcon;
@@ -18,6 +23,9 @@ var() bool Locked;
 
 /* If while locked, door does not take damage */
 var() bool InvulnerableWhileLocked;
+
+/* If this requires a pickup to open */
+var() DInteractionColours InteractionObjectColour;
 
 // FIXME Does this need to be repnotified?
 var int OldWeldIntegrity;
@@ -141,12 +149,17 @@ simulated event DrawDoorHUD( HUD HUD, Canvas C )
         return;
     }
     ScreenLoc = C.Project( WeldUILocation );
-    if( ScreenLoc.X < 0 || ScreenLoc.X + LockedIconSize * 3 >= C.ClipX || ScreenLoc.Y < 0 && ScreenLoc.Y >= C.ClipY)
+    if( ScreenLoc.X < 0
+        || ScreenLoc.X + LockedIconSize * 3 >= C.ClipX
+        || ScreenLoc.Y < 0
+        && ScreenLoc.Y >= C.ClipY)
     {
         return;
     }
     TextureScale = float(LockedIconSize) / LockedIcon.SizeY;
-    C.SetPos(ScreenLoc.X - LockedIconSize / 2, ScreenLoc.Y - LockedIconSize / 2, ScreenLoc.Z);
+    C.SetPos(ScreenLoc.X - LockedIconSize / 2,
+             ScreenLoc.Y - LockedIconSize / 2,
+             ScreenLoc.Z);
     C.DrawTexture( LockedIcon, TextureScale );
 
     X = ScreenLoc.X + LockedIconSize/2 + 5;

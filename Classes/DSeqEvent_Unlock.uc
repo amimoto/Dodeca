@@ -1,10 +1,12 @@
-class DSeqEvent_Unlock extends SequenceEvent;
+class DSeqEvent_Unlock extends DSequenceEvent;
 
 var array<DDoorActor> MyDoors;
 
 event Activated()
 {
     local DDoorActor MyDoor;
+    `log("DSeqEvent_Unlock Instigator:"$Instigator);
+
     foreach MyDoors(MyDoor)
     {
         MyDoor.Unlock();

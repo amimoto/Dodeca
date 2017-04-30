@@ -19,20 +19,27 @@ function CreateDHUD(optional LocalPlayer LocPlay)
     }
 }
 
-
 event bool WidgetInitialized(name WidgetName, name WidgetPath, GFxObject Widget)
 {
     `log("Called WidgetInitialized with "@WidgetName);
     return Super.WidgetInitialized(WidgetName, WidgetPath, Widget);
 }
 
+/*
+function ShowScoreboard(bool newShowScoreboard)
+{
+    Super.ShowScoreboard(newShowScoreboard);
+    GfxDHUDPlayer.ProgressWidget.Show();
+}
+*/
+
 function TickHud(float DeltaTime)
 {
-      Super.TickHud(DeltaTime);
-      if ( GfxDHUDPlayer != none )
-      {
-          GfxDHUDPlayer.TickHud(DeltaTime);
-      }
+    Super.TickHud(DeltaTime);
+    if ( GfxDHUDPlayer != none )
+    {
+        GfxDHUDPlayer.TickHud(DeltaTime);
+    }
 }
 
 

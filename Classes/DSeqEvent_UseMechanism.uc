@@ -1,4 +1,9 @@
-class DSeqEvent_UseMechanism extends SequenceEvent;
+class DSeqEvent_UseMechanism extends DSequenceEvent;
+
+event Activated()
+{
+    `log("DSeqEvent_UseMechanism Instigator:"$Instigator);
+}
 
 defaultproperties
 {

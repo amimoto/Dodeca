@@ -1,6 +1,5 @@
 class DLocalMessage_Interaction extends KFLocalMessage_Interaction;
 
-
 enum DEInteractionMessageType {
         DIMT_None,
 

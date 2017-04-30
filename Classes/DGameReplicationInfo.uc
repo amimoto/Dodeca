@@ -1,15 +1,15 @@
 class DGameReplicationInfo extends KFGameReplicationInfo;
 
-// Key track of the keycard states on this map
+// Keep track of the collectable "key" items on this map
 // Array is:
 // [
-//    int, # red keycard (0: not required on this map,
+//    int, # red key item (0: not required on this map,
 //                        1: required but not possessed,
 //                        2: picked up by someone on team)
-//    int, # green keycard (same as red)
-//    int, # blue keycard (same as blue)
+//    int, # green key item (same as red)
+//    int, # blue key item (same as blue)
 // ]
-var int    KeyCardList[3];
+var int    KeysList[3];
 
 // Keep track of the wave specific traders
 var array<DTraderTrigger>   DTraderList;
@@ -17,7 +17,19 @@ var array<DTraderTrigger>   DTraderList;
 replication
 {
     if ( bNetDirty )
-        KeyCardList;
+        KeysList;
+}
+
+simulated function RequiredKeyItem(int KeyIndex)
+{
+    bNetDirty = True;
+    KeysList[KeyIndex] = 2;
+}
+
+simulated function PickupKeyItem(int KeyIndex)
+{
+    bNetDirty = True;
+    KeysList[KeyIndex] = 2;
 }
 
 simulated function OpenTrader(optional int time)

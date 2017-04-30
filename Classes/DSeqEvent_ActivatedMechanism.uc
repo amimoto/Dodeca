@@ -1,9 +1,8 @@
-class DSeqEvent_ActivatedMechanism extends SequenceEvent;
+class DSeqEvent_ActivatedMechanism extends DSequenceEvent;
 
 defaultproperties
 {
     bPlayerOnly = false
-    bAutoActivateOutputLinks=true
 
     OutputLinks(0)=(LinkDesc="Activated")
 

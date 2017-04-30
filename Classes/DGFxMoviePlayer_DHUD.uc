@@ -5,6 +5,7 @@ var GFxObject DGXHUDManager;
 
 var DGFxHUD_PickupsWidget PickupsWidget;
 var DGFxHUD_IndicatorWidget IndicatorWidget;
+var DGFxHUD_ProgressWidget ProgressWidget;
 
 var float HUDScale;
 
@@ -77,6 +78,14 @@ event bool WidgetInitialized(name WidgetName, name WidgetPath, GFxObject Widget)
             };
             break;
 
+        case ( 'ProgressWidget' ):
+            if ( ProgressWidget == none )
+            {
+                SetWidgetPathBinding( Widget, WidgetPath );
+                ProgressWidget = DGFxHUD_ProgressWidget( Widget );
+                ProgressWidget.InitializeWidget();
+            };
+            break;
 
         break;
     }
@@ -90,18 +99,17 @@ function ShowDHUD(bool newShowDHUD)
 
 function TickHud(float DeltaTime)
 {
-/*
-    if (KeyCardWidget != none)
+    if (ProgressWidget != none)
     {
-        KeyCardWidget.TickHUD(DeltaTime);
+        ProgressWidget.TickHUD(DeltaTime);
     }
-*/
 }
 
 defaultproperties
 {
     WidgetBindings.Add((WidgetName="IndicatorWidget",WidgetClass=class'Dodeca.DGFxHUD_IndicatorWidget'))
     WidgetBindings.Add((WidgetName="PickupsWidget",WidgetClass=class'Dodeca.DGFxHUD_PickupsWidget'))
+    WidgetBindings.Add((WidgetName="ProgressWidget",WidgetClass=class'Dodeca.DGFxHUD_ProgressWidget'))
     MovieInfo=SwfMovie'Dodeca_UI.Widgets'
 
     Priority = 1

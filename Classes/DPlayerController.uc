@@ -1,6 +1,7 @@
 class DPlayerController extends KFGame.KFPlayerController;
 
 var DGFxMoviePlayer_HUD DMyGFxHud;
+var DGFxMoviePlayer_DHUD DMyGFxDHud;
 
 function SetGFxHUD( KFGFxMoviePlayer_HUD NewGFxHud )
 {
@@ -8,6 +9,12 @@ function SetGFxHUD( KFGFxMoviePlayer_HUD NewGFxHud )
     DMyGFxHud = DGFxMoviePlayer_HUD(NewGFxHud);
     Super.SetGFxHUD(NewGFxHud);
     DMyGFxHud.CreateDHUD();
+    DMyGFxDHud = DMyGFxHud.GfxDHUDPlayer;
+}
+
+function bool PerformedUseAction()
+{
+    return Super.PerformedUseAction();
 }
 
 static function UpdateInteractionMessages( Actor InteractingActor )
@@ -23,7 +30,6 @@ static function UpdateInteractionMessages( Actor InteractingActor )
         if( PC != none && PC.Role == ROLE_AUTHORITY )
         {
             UsableActor = GetCurrentUsableActor( P );
-            `log("Usable Actor" @ P);
             if( UsableActor != none )
             {
                 PC.SetTimer( 1.f, true, nameof(CheckCurrentUsableActor), PC );
@@ -39,6 +45,49 @@ static function UpdateInteractionMessages( Actor InteractingActor )
 }
 
 
+static simulated function DInterface_Mechanism GetCurrentMechanismActor( Pawn P, optional bool bUseOnFind=false )
+{
+    local Actor A;
+    local DInterface_Mechanism MechanismActor;
+
+    if ( P == None ) return None;
+
+    foreach P.TouchingActors(class'Actor', A)
+    {
+        MechanismActor = DInterface_Mechanism(A);
+        if ( MechanismActor != None )
+        {
+            return MechanismActor;
+        }
+    }
+
+    return None;
+}
+
+static function UpdateMechanismMessages( Actor InteractingActor )
+{
+    local DInterface_Mechanism MechanismActor;
+    local Pawn P;
+    local DPlayerController PC;
+
+    P = Pawn(InteractingActor);
+    if( P != none )
+    {
+        PC = DPlayerController( P.Controller );
+        if( PC != none && PC.Role == ROLE_AUTHORITY )
+        {
+            MechanismActor = GetCurrentMechanismActor(P);
+            if ( MechanismActor != none )
+            {
+                PC.DMyGFxDHud.ProgressWidget.Ingest(MechanismActor);
+            }
+            else
+            {
+                PC.DMyGFxDHud.ProgressWidget.Hide();
+            }
+        }
+    }
+}
 
 defaultproperties
 {

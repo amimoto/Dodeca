@@ -1,4 +1,4 @@
-class DSeqEvent_UseConsole extends SequenceEvent;
+class DSeqEvent_UseConsole extends DSequenceEvent;
 
 defaultproperties
 {

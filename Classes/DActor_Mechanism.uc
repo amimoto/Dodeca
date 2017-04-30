@@ -1,15 +1,18 @@
-class DMechanismActor extends Actor
+class DActor_Mechanism extends Actor
   placeable;
 
 
-/** Amount of damage a welded door can take */
+/** Amount of activity this actor requires */
 var() int MaxActivityIntegrity;
-/** Current integrity of a welded door */
+/** Current completation state of activity (counts down) */
 var repnotify transient int ActivityIntegrity;
 
 var protected Texture2D ActivityIcon;
 
+// Mechanism Instructions (HOLD E) etc
+var() string ActivityInstructions;
 var() string ActivityIntegrityString;
+
 var() int ActivityIconSize;
 var() float ActivityFontScale;
 
@@ -25,7 +28,7 @@ replication
  * @name    Activating
  ********************************************************************************************* */
 
-function bool TakeActivatingDamage ( int Damage )
+function bool TakeActivatingWork( int Damage )
 {
     ActivityIntegrity -= Damage;
     if ( ActivityIntegrity < 0 ) {
@@ -126,9 +129,14 @@ defaultproperties
     ActivityIcon=Texture2D'Dodeca_UI.hackable_icon'
     ActivityIconSize = 40
     ActivityIntegrityString="Activity"
+    ActivityInstructions = "<%HOLD%> to activate"
     ActivityFontScale = 2
 
     // Health
     MaxActivityIntegrity = 100
     ActivityIntegrity = 100
+
+    SupportedEvents.Add(class'DSeqEvent_ActivatedMechanism')
+    SupportedEvents.Add(class'DSeqEvent_UseMechanism')
+
 }

@@ -1,4 +1,4 @@
-class DSeqEvent_Hacked extends SequenceEvent;
+class DSeqEvent_Hacked extends DSequenceEvent;
 
 defaultproperties
 {
