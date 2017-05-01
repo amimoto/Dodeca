@@ -87,6 +87,7 @@ defaultproperties
     GameReplicationInfoClass = class'Dodeca.DGameReplicationInfo'
     GameConductorClass = class'Dodeca.DGameConductor'
     HUDType=class'Dodeca.DGFxHudWrapper'
+    DefaultPawnClass=class'Dodeca.DPawn_Human'
 
     SpawnManagerClasses(0)=class'Dodeca.DAISpawnManager_Short'
     SpawnManagerClasses(1)=class'Dodeca.DAISpawnManager_Normal'
