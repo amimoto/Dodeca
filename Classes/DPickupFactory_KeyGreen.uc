@@ -7,5 +7,8 @@ defaultproperties
     Begin Object Name=StaticMeshComponent0
         StaticMesh=StaticMesh'Dodeca_UI.KeycardGreen'
     End Object
+    PickupMesh=StaticMeshComponent0
+    Components.Add(StaticMeshComponent0)
     InventoryType = class'Dodeca.DInventory_KeyGreen'
+    PickupName = "green key"
 }
