@@ -26,10 +26,29 @@ simulated function bool CanBeActivated( Pawn User )
     return false;
 }
 
-function string ActivationString()
+function string ActivationString(PlayerController PC)
 {
-    if ( Mechanism == none ) return "";
-    return Mechanism.ActivityInstructions;
+    local KFPlayerInput KFInput;
+    local KeyBind BoundKey;
+    local string KeyString;
+
+    KFInput = KFPlayerInput(PC.PlayerInput);
+    if( KFInput == none || Mechanism == none )
+    {
+        return "";
+    }
+    else
+    {
+        KFInput.GetKeyBindFromCommand(BoundKey, 
+            class'KFGame.KFLocalMessage_Interaction'.default.USE_COMMAND, 
+            false);
+        KeyString = KFInput.GetBindDisplayName(BoundKey);
+        return Repl(
+                      Mechanism.ActivityInstructions,
+                      "<%HOLD%>",
+                      "HOLD ("@KeyString@")"
+                  );
+    }
 }
 
 function int ActivationPercentage()
@@ -39,6 +58,11 @@ function int ActivationPercentage()
         100 - 100 * Mechanism.ActivityIntegrity
                   / Mechanism.MaxActivityIntegrity
     );
+}
+
+function bool IsActivated()
+{
+    return Mechanism.IsActivated();
 }
 
 simulated function bool GetIsUsable( Pawn User )
@@ -84,10 +108,10 @@ simulated event Touch(Actor Other,
                         vector HitLocation,
                         vector HitNormal)
 {
-    SetMechanismPostRender(true);
     Super.Touch(Other, OtherComp, HitLocation, HitNormal);
     if (Role == ROLE_Authority)
     {
+        SetMechanismPostRender(true);
         class'DPlayerController'.static.UpdateMechanismMessages(Other);
     }
 }
@@ -95,9 +119,9 @@ simulated event Touch(Actor Other,
 simulated event UnTouch(Actor Other)
 {
     super.UnTouch( Other );
-    SetMechanismPostRender(false);
     if (Role == ROLE_Authority)
     {
+        SetMechanismPostRender(false);
         class'DPlayerController'.static.UpdateMechanismMessages(Other);
     }
 }
@@ -140,6 +164,6 @@ defaultproperties
     SupportedEvents.Add(class'DSeqEvent_ActivatedMechanism')
     SupportedEvents.Add(class'DSeqEvent_UseMechanism')
 
-    UsableAfterActivity = true
+    // UsableAfterActivity = true
 }
 

@@ -79,11 +79,11 @@ static function UpdateMechanismMessages( Actor InteractingActor )
             MechanismActor = GetCurrentMechanismActor(P);
             if ( MechanismActor != none )
             {
-                PC.DMyGFxDHud.ProgressWidget.Ingest(MechanismActor);
+                PC.DMyGFxDHud.ProgressWidgetContainer.Ingest(MechanismActor);
             }
             else
             {
-                PC.DMyGFxDHud.ProgressWidget.Hide();
+                PC.DMyGFxDHud.ProgressWidgetContainer.Hide();
             }
         }
     }

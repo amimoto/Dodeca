@@ -1,23 +1,27 @@
-class DGFxHUD_ProgressWidget extends GFxObject;
+class DGFxHUD_ProgressWidgetContainer extends GFxObject;
 
 var PlayerController PC;
 
-var float CurrentAlpha;
+var bool Visible;
 var DInterface_Mechanism CurrentMechanismActor;
 
 function InitializeWidget()
 {
+    Hide();
     PC = GetPC();
 }
 
-
 function Ingest( DInterface_Mechanism MechanismActor )
 {
-    if ( MechanismActor.isA('DTrigger_Mechanism') )
+    if ( MechanismActor.isA('DTrigger_Mechanism') && !MechanismActor.IsActivated() )
     {
         SetPickupLabel( MechanismActor.ActivationString(PC) );
         CurrentMechanismActor = MechanismActor;
         TickHud(0);
+        Show();
+    }
+    else {
+        Hide();
     }
 }
 
@@ -28,22 +32,36 @@ function TickHud(float DeltaTime)
         SetProgressBar(0);
         SetProgressData("0%");
     }
-    else
+
+    // Keep updating the progress bar up until 100%
+    else if ( !CurrentMechanismActor.IsActivated() )
     {
         percentComplete = CurrentMechanismActor.ActivationPercentage();
         SetProgressBar(percentComplete);
         SetProgressData(string(percentComplete)$"%");
     }
+
+    // Hide after activation
+    else
+    {
+        Hide();
+    }
 }
 
-function SetAlpha(float alpha)
+function Hide()
 {
-    local ASDisplayInfo displayInfo;
+    if ( Visible ) {
+        SetBool("show",false);
+        Visible = false;
+    }
+}
 
-    CurrentAlpha = alpha;
-    displayInfo = GetDisplayInfo();
-    displayInfo.Alpha = alpha;
-    SetDisplayInfo(displayInfo);
+function Show()
+{
+    if ( !Visible ) {
+        SetBool("show",True);
+        Visible = True;
+    }
 }
 
 function SetPickupLabel(string LabelMessage)
@@ -69,6 +87,6 @@ function SetProgressBarPercentData(int Percent)
 
 defaultproperties
 {
-    CurrentAlpha = 100
+    Visible = false;
 }
 

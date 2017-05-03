@@ -7,15 +7,29 @@ function GiveTo( Pawn P )
     local string PickupMessage;
     local KFPlayerController KFPC;
     local KFGFxHudWrapper GFxHUDWrapper;
+    local byte IndicatorIndex;
+    local DGFxMoviePlayer_HUD DGFxHUD;
+    local Inventory Inv;
 
-    Super.GiveTo(P);
+    // FIXME: Maybe this should actually be in the inventory item
+    Inv = spawn(InventoryType);
+    if ( Inv != None )
+    {
+        Inv.GiveTo(P);
+        Inv.AnnouncePickup(P);
+    }
 
-    PickupMessage = P.Controller.PlayerReplicationInfo @ " has acquired a " @ PickupName;
+    PickedUpBy(P);
 
+    PickupMessage = P.Controller.PlayerReplicationInfo.PlayerName @ " has acquired a " @ PickupName;
+
+    IndicatorIndex = DInventory_Key(Inv).IndicatorIndex;
     foreach LocalPlayerControllers(class'KFPlayerController', KFPC)
     {
         GFxHUDWrapper = KFGFxHudWrapper(KFPC.myHUD);
-        GFxHUDWrapper.HudMovie.ShowNonCriticalMessage(PickupMessage);
+        DGFxHUD = DGFxMoviePlayer_HUD(GFxHUDWrapper.HudMovie);
+        DGFxHUD.ShowNonCriticalMessage(PickupMessage);
+        DGFxHUD.GfxDHUDPlayer.SetIndicator(IndicatorIndex,2);
     }
 }
 

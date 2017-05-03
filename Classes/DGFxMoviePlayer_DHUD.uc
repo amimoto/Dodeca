@@ -5,7 +5,7 @@ var GFxObject DGXHUDManager;
 
 var DGFxHUD_PickupsWidget PickupsWidget;
 var DGFxHUD_IndicatorWidget IndicatorWidget;
-var DGFxHUD_ProgressWidget ProgressWidget;
+var DGFxHUD_ProgressWidgetContainer ProgressWidgetContainer;
 
 var float HUDScale;
 
@@ -18,6 +18,14 @@ function Init(optional LocalPlayer LocPlay)
 
     UpdateRatio();
     //UpdateScale();
+}
+
+function SetIndicator(int indicatorIndex, int indicatorState)
+{
+    if ( IndicatorWidget != none )
+    {
+        IndicatorWidget.SetIndicator(indicatorIndex,indicatorState);
+    }
 }
 
 function UpdateRatio(optional float fScale=1.f)
@@ -78,12 +86,12 @@ event bool WidgetInitialized(name WidgetName, name WidgetPath, GFxObject Widget)
             };
             break;
 
-        case ( 'ProgressWidget' ):
-            if ( ProgressWidget == none )
+        case ( 'ProgressWidgetContainer' ):
+            if ( ProgressWidgetContainer == none )
             {
                 SetWidgetPathBinding( Widget, WidgetPath );
-                ProgressWidget = DGFxHUD_ProgressWidget( Widget );
-                ProgressWidget.InitializeWidget();
+                ProgressWidgetContainer = DGFxHUD_ProgressWidgetContainer( Widget );
+                ProgressWidgetContainer.InitializeWidget();
             };
             break;
 
@@ -99,17 +107,19 @@ function ShowDHUD(bool newShowDHUD)
 
 function TickHud(float DeltaTime)
 {
-    if (ProgressWidget != none)
+    if (ProgressWidgetContainer != none)
     {
-        ProgressWidget.TickHUD(DeltaTime);
+        ProgressWidgetContainer.TickHUD(DeltaTime);
     }
+
 }
 
 defaultproperties
 {
     WidgetBindings.Add((WidgetName="IndicatorWidget",WidgetClass=class'Dodeca.DGFxHUD_IndicatorWidget'))
     WidgetBindings.Add((WidgetName="PickupsWidget",WidgetClass=class'Dodeca.DGFxHUD_PickupsWidget'))
-    WidgetBindings.Add((WidgetName="ProgressWidget",WidgetClass=class'Dodeca.DGFxHUD_ProgressWidget'))
+    WidgetBindings.Add((WidgetName="ProgressWidgetContainer",WidgetClass=class'Dodeca.DGFxHUD_ProgressWidgetContainer'))
+
     MovieInfo=SwfMovie'Dodeca_UI.Widgets'
 
     Priority = 1

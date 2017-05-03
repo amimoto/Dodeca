@@ -6,12 +6,6 @@ class DDoorActor extends KFDoorActor;
    natually perform attacks on the door.
 */
 
-enum DInteractionColours {
-    DIC_Red,
-    DIC_Green,
-    DIC_Blue,
-};
-
 /** UI icon used for lock */
 var protected Texture2D LockedIcon;
 
@@ -23,9 +17,6 @@ var() bool Locked;
 
 /* If while locked, door does not take damage */
 var() bool InvulnerableWhileLocked;
-
-/* If this requires a pickup to open */
-var() DInteractionColours InteractionObjectColour;
 
 // FIXME Does this need to be repnotified?
 var int OldWeldIntegrity;

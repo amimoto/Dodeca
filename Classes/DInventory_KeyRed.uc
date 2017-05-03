@@ -5,6 +5,7 @@ DefaultProperties
     Begin Object Name=StaticMeshComponent0
         StaticMesh=StaticMesh'Dodeca_UI.KeycardRed'
     End Object
+    IndicatorIndex = 0
 }
 
 
