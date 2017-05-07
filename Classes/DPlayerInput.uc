@@ -15,7 +15,6 @@ exec function Interact()
     if( KFIM != none && KFIM.Instigator != none )
     {
         MechanismTrigger = GetCurrentMechanismActor( KFIM.Instigator );
-        `log("Interact MechanismTrigger: "$MechanismTrigger);
         if (MechanismTrigger != none && MechanismTrigger.IsA('DTrigger_Mechanism'))
         {
             TargetMechanism = DTrigger_Mechanism(MechanismTrigger);

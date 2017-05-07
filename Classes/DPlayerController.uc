@@ -1,4 +1,4 @@
-class DPlayerController extends KFGame.KFPlayerController;
+class DPlayerController extends ControlledDifficulty.CD_PlayerController;
 
 var DGFxMoviePlayer_HUD DMyGFxHud;
 var DGFxMoviePlayer_DHUD DMyGFxDHud;
@@ -44,6 +44,36 @@ static function UpdateInteractionMessages( Actor InteractingActor )
     }
 }
 
+static function BroadcastUpdateInteractionMessages( Actor InteractingActor )
+{
+    local KFInterface_Usable UsableActor;
+    local PlayerController PC;
+    local Pawn ActorPawn;
+    local KFPawn_Human P;
+
+    ActorPawn = Pawn(InteractingActor);
+    foreach ActorPawn.WorldInfo.AllPawns( class'KFPawn_Human', P )
+    {
+        PC = PlayerController( P.Controller );
+        if( PC != none )
+        {
+            `log("BroadcastUpdateInteractionMessages"@P);
+            UsableActor = GetCurrentUsableActor( ActorPawn );
+            `log("UsableActor"@UsableActor);
+            `log("InteractingActor"@InteractingActor);
+            if( UsableActor != none )
+            {
+                PC.SetTimer( 1.f, true, nameof(CheckCurrentUsableActor), PC );
+                PC.ReceiveLocalizedMessage( class'DLocalMessage_Interaction', UsableActor.GetInteractionIndex( P ) );
+            }
+            else
+            {
+                PC.ClearTimer( nameof(CheckCurrentUsableActor), PC );
+                PC.ReceiveLocalizedMessage( class'KFLocalMessage_Interaction', IMT_None );
+            }
+        }
+    }
+}
 
 static simulated function DInterface_Mechanism GetCurrentMechanismActor( Pawn P, optional bool bUseOnFind=false )
 {

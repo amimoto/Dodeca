@@ -1,6 +1,7 @@
 class DInventory_Key extends Inventory;
 
 var() byte IndicatorIndex;
+var() string PickupName;
 
 DefaultProperties
 {
@@ -9,6 +10,7 @@ DefaultProperties
     End Object
     PickupFactoryMesh=StaticMeshComponent0
     IndicatorIndex = 0
+    PickupName = "key"
 }
 
 

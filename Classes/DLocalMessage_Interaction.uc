@@ -28,6 +28,15 @@ enum DEInteractionMessageType {
         IMT_PerformActivity,
         IMT_Activating,
         IMT_UseMechanism,
+
+        IMT_PartyIncomplete,
+        IMT_PartyComplete,
+        IMT_PartyPlayerRequired,
+        IMT_PartyActivating,
+        IMT_PartyCannotActivate,
+
+        IMT_Unlock,
+        IMT_CannotUnlock
 };
 
 
@@ -41,14 +50,34 @@ static function string GetString(
     optional Object OptionalObject
     )
 {
+    local DTrigger_KeyUnlock DKeyTrigger;
     switch ( Switch )
     {
-        case IMT_PerformHack:
-            return "HACK TERMINAL";
+        case IMT_Unlock:
+            return "UNLOCK";
+        case IMT_CannotUnlock:
+            DKeyTrigger = DTrigger_KeyUnlock(OptionalObject);
+            if ( RelatedPRI_1 != none )
+            {
+                return "LOCKED."@RelatedPRI_1.PlayerName@"HAS THE"@Caps(DKeyTrigger.InteractionKeyNoun);
+            }
+            else{
+                return "LOCKED. FIND"@Caps(DKeyTrigger.InteractionKeyNoun);
+            }
         case IMT_DoorLocked:
             return "LOCKED";
         case IMT_UseConsole:
             return "USE CONSOLE";
+        case IMT_PartyIncomplete:
+            return "WAITING FOR OTHER PLAYERS";
+        case IMT_PartyComplete:
+            return "ALL PLAYERS PRESENT";
+        case IMT_PartyPlayerRequired:
+            return "JOIN YOUR TEAM";
+        case IMT_PartyActivating:
+            return "ACTIVATING";
+        case IMT_PartyCannotActivate:
+            return "WAITING FOR OTHER PLAYERS";
         default:
             return Super.GetString(Switch,bPRI1HUD,RelatedPRI_1,RelatedPRI_2,OptionalObject);
     };
@@ -61,6 +90,8 @@ static function string GetKeyBind( PlayerController P, optional int Switch )
     local KeyBind BoundKey;
     local KFPlayerInput KFInput;
 
+    `log("DLocalMessage_Interaction.GetKeyBind"@P);
+
     KeyString = Super.GetKeyBind(P,Switch);
 
     KFInput = KFPlayerInput(P.PlayerInput);
@@ -71,10 +102,14 @@ static function string GetKeyBind( PlayerController P, optional int Switch )
 
     switch ( Switch ) {
         case IMT_DoorLocked:
+        case IMT_PartyPlayerRequired:
+        case IMT_PartyIncomplete:
             KeyString = "";
             break;
         case IMT_PerformHack:
         case IMT_UseConsole:
+        case IMT_PartyComplete:
+        case IMT_Unlock:
             KFInput.GetKeyBindFromCommand(BoundKey, default.USE_COMMAND, false);
             KeyString = KFInput.GetBindDisplayName(BoundKey);
             break;

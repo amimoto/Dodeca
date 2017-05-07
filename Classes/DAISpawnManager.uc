@@ -1,3 +1,0 @@
-class DAISpawnManager extends KFAISpawnManager;
-
-

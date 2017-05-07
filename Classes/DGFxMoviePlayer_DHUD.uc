@@ -6,6 +6,7 @@ var GFxObject DGXHUDManager;
 var DGFxHUD_PickupsWidget PickupsWidget;
 var DGFxHUD_IndicatorWidget IndicatorWidget;
 var DGFxHUD_ProgressWidgetContainer ProgressWidgetContainer;
+var DGFxHUD_TimerWidgetContainer TimerWidgetContainer;
 
 var float HUDScale;
 
@@ -95,6 +96,15 @@ event bool WidgetInitialized(name WidgetName, name WidgetPath, GFxObject Widget)
             };
             break;
 
+        case ( 'TimerWidgetContainer' ):
+            if ( TimerWidgetContainer == none )
+            {
+                SetWidgetPathBinding( Widget, WidgetPath );
+                TimerWidgetContainer = DGFxHUD_TimerWidgetContainer( Widget );
+                TimerWidgetContainer.InitializeWidget();
+            };
+            break;
+
         break;
     }
 
@@ -112,6 +122,12 @@ function TickHud(float DeltaTime)
         ProgressWidgetContainer.TickHUD(DeltaTime);
     }
 
+    if (TimerWidgetContainer != none)
+    {
+        TimerWidgetContainer.TickHUD(DeltaTime);
+    }
+
+
 }
 
 defaultproperties
@@ -119,6 +135,7 @@ defaultproperties
     WidgetBindings.Add((WidgetName="IndicatorWidget",WidgetClass=class'Dodeca.DGFxHUD_IndicatorWidget'))
     WidgetBindings.Add((WidgetName="PickupsWidget",WidgetClass=class'Dodeca.DGFxHUD_PickupsWidget'))
     WidgetBindings.Add((WidgetName="ProgressWidgetContainer",WidgetClass=class'Dodeca.DGFxHUD_ProgressWidgetContainer'))
+    WidgetBindings.Add((WidgetName="TimerWidgetContainer",WidgetClass=class'Dodeca.DGFxHUD_TimerWidgetContainer'))
 
     MovieInfo=SwfMovie'Dodeca_UI.Widgets'
 

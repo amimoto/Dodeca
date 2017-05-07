@@ -1,6 +1,6 @@
 class DTrigger_Mechanism extends Trigger_PawnsOnly
-implements(DInterface_Mechanism)
-;
+    implements(DInterface_Mechanism)
+    ;
 
 // Mechanism Actor Object
 var() DActor_Mechanism Mechanism;
@@ -39,8 +39,8 @@ function string ActivationString(PlayerController PC)
     }
     else
     {
-        KFInput.GetKeyBindFromCommand(BoundKey, 
-            class'KFGame.KFLocalMessage_Interaction'.default.USE_COMMAND, 
+        KFInput.GetKeyBindFromCommand(BoundKey,
+            class'KFGame.KFLocalMessage_Interaction'.default.USE_COMMAND,
             false);
         KeyString = KFInput.GetBindDisplayName(BoundKey);
         return Repl(

@@ -17,6 +17,11 @@ function GiveTo( Pawn P )
     {
         Inv.GiveTo(P);
         Inv.AnnouncePickup(P);
+
+        if ( Inv.Isa('DInventory_Key') )
+        {
+            DInventory_Key(Inv).PickupName = PickupName;
+        }
     }
 
     PickedUpBy(P);

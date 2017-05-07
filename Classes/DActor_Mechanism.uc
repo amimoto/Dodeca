@@ -1,7 +1,6 @@
 class DActor_Mechanism extends Actor
   placeable;
 
-
 /** Amount of activity this actor requires */
 var() int MaxActivityIntegrity;
 /** Current completation state of activity (counts down) */
