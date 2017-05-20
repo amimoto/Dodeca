@@ -200,7 +200,7 @@ defaultproperties
     SupportedEvents.Add(class'DSeqEvent_Unlock')
     SupportedEvents.Add(class'DSeqEvent_Lock')
 
-    UsableAfterActivity = true
+    //UsableAfterActivity = true
 
     InteractionKeyNoun = "key"
     InteractionConsumeKey = "The key has been used."

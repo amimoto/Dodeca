@@ -1,6 +1,5 @@
 class DInventoryManager extends KFInventoryManager;
 
-
 enum DKeyColours {
     DKC_Red,
     DKC_Green,

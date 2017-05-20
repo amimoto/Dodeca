@@ -1,4 +1,4 @@
-class DPlayerController extends ControlledDifficulty.CD_PlayerController;
+class DPlayerController extends KFPlayerController;
 
 var DGFxMoviePlayer_HUD DMyGFxHud;
 var DGFxMoviePlayer_DHUD DMyGFxDHud;

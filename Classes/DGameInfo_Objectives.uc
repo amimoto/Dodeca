@@ -1,183 +1,186 @@
-class DGameInfo_Objectives extends CD_Survial;
+class DGameInfo_Objectives extends KFGameInfo;
 
-// My replacement KFGRI
-var DGameReplicationInfo   DMyKFGRI;
+/*********************************************************************
 
-// Keep track of the wave specific traders
-var array<DTraderTrigger>   DTraderList;
+  State Sequence:
 
-// If this is on, we don't have a break for Trader
-var config bool NoTraderBreak;
+    * Intro: Perform any cinematics of whatever in this state
+    * PlayingChapter: Where player has control to do what they wish
+    * Interlude:
+    * Epilogue
 
-// This allows us to create a list of all the traders in both the
-// standard form but also in the wave targeted versions.
-function InitTraderList()
+  State Details:
+
+    * BeginState
+    * EndState
+
+  Spawning:
+
+
+
+**********************************************************************/
+
+var() bool IntroExists;
+
+var DAISpawnManager DSpawnManager;
+var bool KillCounterEnabled;
+
+
+/*********************************************************************************************
+ * CD Variables
+ *********************************************************************************************/
+
+// Console/log text output facility
+var CD_ConsolePrinter GameInfo_CDCP;
+
+/*********************************************************************************************
+ * Entry points
+ *********************************************************************************************/
+event PreBeginPlay()
 {
-    local DTraderTrigger MyTrader;
-
-    super.InitTraderList();
-
-    DTraderList.Remove(0, DTraderList.Length);
-    DMyKFGRI.DTraderList.Remove(0, DTraderList.Length);
-    foreach DynamicActors(class'DTraderTrigger', MyTrader)
-    {
-        DTraderList.AddItem(MyTrader);
-        DMyKFGRI.DTraderList.AddItem(MyTrader);
-    }
-}
-
-// This scans all the door actors on this map to 
-
-function PreBeginPlay()
-{
-    Super(FrameworkGame).PreBeginPlay();
-
-    DMyKFGRI = DGameReplicationInfo(GameReplicationInfo);
-    MyKFGRI = DMyKFGRI;
-    InitGRIVariables();
-
-    CreateTeam(0);
-    InitGameConductor();
-    InitAIDirector();
-    InitTraderList();
-    ReplicateWelcomeScreen();
-
-    WorldInfo.TWLogsInit();
-
-`if(`notdefined(ShippingPC))
-    if ( WorldInfo.NetMode == NM_ListenServer  )
-    {
-        WorldInfo.AddOnScreenDebugMessage(-1, 60, MakeColor(255,0,0,255), "NM_ListenServer");
-    }
-`endif
-
+    super.PreBeginPlay();
     InitSpawnManager();
     UpdateGameSettings();
 
-    `log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> YAY!");
+    // FIXME: Decide what to do here.
+    GameLength = GL_Normal;
+    MyKFGRI.bHidePawnIcons = true;
+
+}
+
+event PostBeginPlay()
+{
+    super.PostBeginPlay();
+}
+
+/* StartMatch()
+Start the game - inform all actors that the match is starting, and spawn player pawns
+*/
+function StartMatch()
+{
+    super.StartMatch();
+    if ( IntroExists ) { GotoState('Intro'); }
+       else            { GotoState('PlayingChapter'); }
+}
+
+/*********************************************************************************************
+ * Setup Functions
+ *********************************************************************************************/
+
+/** Set up the spawning */
+function InitSpawnManager()
+{
+    SpawnManager = new(self) class'DAISpawnManager';
+    DSpawnManager = DAISpawnManager(SpawnManager);
+    DSpawnManager.DInitialize( GameInfo_CDCP );
+    SetTimer( 0.25f, true, nameOf(CheckZedDemographics) );
 }
 
 
-State PlayingWave
+/*********************************************************************************************
+ * Recurring events
+ *********************************************************************************************/
+
+function CheckZedDemographics()
+{
+    DSpawnManager.SpawnZeds();
+}
+
+/*********************************************************************************************
+ * STATE Intro
+ *********************************************************************************************/
+State Intro
 {
     function BeginState( Name PreviousStateName )
     {
-        MyKFGRI.SetWaveActive(TRUE, GetGameIntensityForMusic());
-        StartWave();
-
-        DMyKFGRI.OpenWaveTraders();
-
-
-        if ( AllowBalanceLogging() )
-        {
-            LogPlayersDosh(GBE_WaveStart);
-        }
     }
+    function EndState( Name NextStateName )
+    {
+    }
+}
 
+/*********************************************************************************************
+ * STATE PlayingChapter
+ *********************************************************************************************/
+State PlayingChapter
+{
+    function BeginState( Name PreviousStateName )
+    {
+    }
+    function EndState( Name NextStateName )
+    {
+    }
     function bool IsWaveActive()
     {
         return true;
     }
 }
 
+
+/*********************************************************************************************
+ * STATE Interlude
+ *********************************************************************************************/
+State Interlude
+{
+    function BeginState( Name PreviousStateName )
+    {
+    }
+    function EndState( Name NextStateName )
+    {
+    }
+}
+
+
+/*********************************************************************************************
+ * STATE Epilogue
+ *********************************************************************************************/
+State Epilogue
+{
+    function BeginState( Name PreviousStateName )
+    {
+    }
+    function EndState( Name NextStateName )
+    {
+    }
+}
+
+
+
+// Stops the system from counting kills for wave-end
+function StopCountingZedKills()
+{
+    KillCounterEnabled = false;
+}
+
+function StartCountingZedKills()
+{
+    KillCounterEnabled = true;
+}
+
+// Prevents the system from spawning new Zeds
+function StopZedSpawning()
+{
+}
+
+function StartZedSpawning()
+{
+}
+
+// This huge function that was extracted allows us to manipulate how
+// killed Zeds affect the counter.
 function Killed(Controller Killer, Controller KilledPlayer, Pawn KilledPawn, class<DamageType> DT)
 {
-    local KFPlayerReplicationInfo KilledPRI;
-    local KFPlayerController KFPC;
-    local int PlayerScoreDelta, TeamPenalty;
-    local KFPerk KFPCP;
-    local KFPawn_Monster MonsterPawn;
-    local class<DamageType> LastHitByDamageType;
+    Super.Killed(Killer,KilledPlayer,KilledPawn,DT);
 
-    if( KilledPlayer != None && KilledPlayer.bIsPlayer )
-    {
-        // Let the game conductor know a human team player died
-        if( KilledPlayer.GetTeamNum() == 0 && Killer != none && Killer.GetTeamNum() == 255 )
-        {
-            GameConductor.NotifyHumanTeamPlayerDeath();
-        }
-
-        KilledPRI = KFPlayerReplicationInfo( KilledPlayer.PlayerReplicationInfo );
-        if( KilledPRI != none )
-        {
-            // Dosh penalty on death
-            PlayerScoreDelta = GetAdjustedDeathPenalty( KilledPRI );
-            `log("SCORING: Player" @ KilledPRI.PlayerName @ "next starting dosh =" @ PlayerScoreDelta + KilledPRI.Score, bLogScoring);
-            KilledPRI.AddDosh( PlayerScoreDelta );
-            TeamPenalty = GetAdjustedTeamDeathPenalty( KilledPRI );
-
-            if( KilledPRI.Team != none )
-            {
-                KFTeamInfo_Human(KilledPRI.Team).AddScore( -TeamPenalty );
-                `log("SCORING: Team lost" @ TeamPenalty @ "dosh for a player dying", bLogScoring);
-            }
-
-            KilledPRI.PlayerHealth = 0;
-            KilledPRI.PlayerHealthPercent = 0;
-        }
-
-        KFPC = KFPlayerController( KilledPlayer );
-    }
-
-    Super(GameInfo).Killed( Killer, KilledPlayer, KilledPawn, DT );
-
-    // Maybe do a DramaticEvent that may trigger Zedtime when someone is killed
-    if( Killer != KilledPlayer )
-    {
-        CheckZedTimeOnKill( Killer, KilledPlayer, KilledPawn, DT );
-    }
-
-    // Update pawn counters
     if( KilledPawn != none && KilledPawn.GetTeamNum() == 255 )
     {
-        if( Killer != none )
-        {
-            KFPC = KFPlayerController( Killer );
-            if( KFPC != none )
-            {
-                MonsterPawn = KFPawn_Monster( KilledPawn );
-                if( MonsterPawn != none )
-                {
-                    LastHitByDamageType = GetLastHitByDamageType( DT, MonsterPawn, Killer );
-
-                    //Chris: We have to do it earlier here because we need a damage type
-                    KFPC.AddZedKill( MonsterPawn.class, GameDifficulty, LastHitByDamageType );
-
-                    KFPCP = KFPC.GetPerk();
-                    if( KFPCP != none )
-                    {
-                        if( KFPCP.CanEarnSmallRadiusKillXP( LastHitByDamageType ) )
-                        {
-                            CheckForBerserkerSmallRadiusKill( MonsterPawn, KFPC );
-                        }
-
-                        KFPCP.AddVampireHealth( KFPC, LastHitByDamageType );
-                    }
-                }
-            }
-        }
-
-        RefreshMonsterAliveCount();
-
         if( SpawnManager != None )
         {
-            MyKFGRI.AIRemaining--;
-
-            `log("@@@@ ZED COUNT DEBUG: MyKFGRI.AIRemaining =" @ MyKFGRI.AIRemaining, bLogAICount);
-            `log("@@@@ ZED COUNT DEBUG: AIAliveCount =" @ AIAliveCount, bLogAICount);
         }
     }
-
-    // if not boss wave, play progress update trader dialog
-    if( !MyKFGRI.IsFinalWave() && KilledPawn.IsA('KFPawn_Monster') )
-    {
-        // no KFTraderDialogManager object on dedicated server, so use static function
-        class'KFTraderDialogManager'.static.PlayGlobalWaveProgressDialog( MyKFGRI.AIRemaining, MyKFGRI.WaveTotalAICount, WorldInfo );
-    }
-
-    CheckWaveEnd();
-
 }
+
+
 defaultproperties
 {
     PlayerControllerClass = class'Dodeca.DPlayerController'
@@ -185,4 +188,28 @@ defaultproperties
     GameConductorClass = class'Dodeca.DGameConductor'
     HUDType=class'Dodeca.DGFxHudWrapper'
     DefaultPawnClass=class'Dodeca.DPawn_Human'
+    KillCounterEnabled = true
+
+
+    Begin Object Class=CD_ConsolePrinter Name=Default_CDCP
+    End Object
+    GameInfo_CDCP=Default_CDCP
+
+    // Preload content classes (by reference) to prevent load time hitches during gameplay
+    // and keeps the GC happy.  This will also load client content -- via GRI.GameClass
+    AIClassList(AT_Clot)=class'KFGameContent.KFPawn_ZedClot_Cyst'
+    AIClassList(AT_AlphaClot)=class'KFGameContent.KFPawn_ZedClot_Alpha'
+    AIClassList(AT_SlasherClot)=class'KFGameContent.KFPawn_ZedClot_Slasher'
+    AIClassList(AT_Crawler)=class'KFGameContent.KFPawn_ZedCrawler'
+    AIClassList(AT_GoreFast)=class'KFGameContent.KFPawn_ZedGorefast'
+    AIClassList(AT_Stalker)=class'KFGameContent.KFPawn_ZedStalker'
+    AIClassList(AT_Scrake)=class'KFGameContent.KFPawn_ZedScrake'
+    AIClassList(AT_FleshPound)=class'KFGameContent.KFPawn_ZedFleshpound'
+    AIClassList(AT_Bloat)=class'KFGameContent.KFPawn_ZedBloat'
+    AIClassList(AT_Siren)=class'KFGameContent.KFPawn_ZedSiren'
+    AIClassList(AT_Husk)=class'KFGameContent.KFPawn_ZedHusk'
+    AIBossClassList(BAT_Hans)=class'KFGameContent.KFPawn_ZedHans'
+    AIBossClassList(BAT_Patriarch)=class'KFGameContent.KFPawn_ZedPatriarch'
+
+    NumAlwaysRelevantZeds=3
 }

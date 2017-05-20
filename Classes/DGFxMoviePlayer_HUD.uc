@@ -22,6 +22,20 @@ function CreateDHUD(optional LocalPlayer LocPlay)
 event bool WidgetInitialized(name WidgetName, name WidgetPath, GFxObject Widget)
 {
     `log("Called WidgetInitialized with "@WidgetName);
+    switch(WidgetName)
+    {
+        case 'WaveInfoContainer':
+            if ( WaveInfoWidget == none )
+            {
+                WaveInfoWidget = KFGFxHUD_WaveInfo(Widget);
+                `log("WaveInfoContainer has been setup with"$Widget);
+                WaveInfoWidget.InitializeHUD();
+                SetWidgetPathBinding( Widget, WidgetPath );
+            }
+            break;
+
+    }
+
     return Super.WidgetInitialized(WidgetName, WidgetPath, Widget);
 }
 
@@ -46,4 +60,5 @@ function TickHud(float DeltaTime)
 defaultproperties
 {
     DHUDClass=class'DGFxMoviePlayer_DHUD'
+    WidgetBindings(9) = (WidgetName="WaveInfoContainer", WidgetClass=class'DGFxHUD_WaveInfo')
 }

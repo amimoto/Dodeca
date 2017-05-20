@@ -2,7 +2,41 @@ class DActor_Spawner extends Actor
   placeable;
 
 // While true, this spawner will be injecting zeds into the game
-var() bool Enabled;
+var() bool SpawnEnabeld;
+
+function SpawnStart()
+{
+}
+
+function SpawnZeds()
+{
+}
+
+function SpawnStop()
+{
+}
+
+// Stops the system from counting kills for wave-end
+function StopCountingZedKills()
+{
+    DGameInfo_Objectives(WorldInfo.Game).StopCountingZedKills();
+}
+
+function StartCountingZedKills()
+{
+    DGameInfo_Objectives(WorldInfo.Game).StartCountingZedKills();
+}
+
+// Prevents the system from spawning new Zeds
+function StopZedSpawning()
+{
+    DGameInfo_Objectives(WorldInfo.Game).StopZedSpawning();
+}
+
+function StartZedSpawning()
+{
+    DGameInfo_Objectives(WorldInfo.Game).StartZedSpawning();
+}
 
 
 defaultproperties
