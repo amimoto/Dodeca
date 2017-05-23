@@ -4,6 +4,8 @@ class DActor_Spawner extends Actor
 // While true, this spawner will be injecting zeds into the game
 var() bool SpawnEnabeld;
 
+// The Squads that this Spawner might use
+
 function SpawnStart()
 {
 }

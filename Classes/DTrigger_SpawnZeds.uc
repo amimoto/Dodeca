@@ -4,8 +4,11 @@ struct StructSpawnTarget
 {
     /** Name of the Zed to spawn at the target */
     var() string ZedName;
+
     /** The KFPathNode that this Zed should spawn */
     var() KFPathNode SpawnTarget;
+
+
 };
 
 /** A list of all the spawns */

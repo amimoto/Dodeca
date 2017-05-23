@@ -20,6 +20,10 @@ var array< class<KFPawn_Monster> > NextAIToSpawn;
  * Base Functions
  *********************************************************************************************/
 
+/*********************************************************************************************
+ * Base Functions
+ *********************************************************************************************/
+
 function DInitialize( CD_ConsolePrinter NewCDCP )
 {
     Initialize();
@@ -34,9 +38,16 @@ function DInitialize( CD_ConsolePrinter NewCDCP )
 // more zeds that must be spawned.
 function SpawnZeds()
 {
+    local DGameReplicationInfo KFGRI;
     local int ZedSlotsAvailable, SpawnMarkerIndex;
     local KFSpawnVolume SpawnVolume;
     local array< SpawnMarkerInfo > SpawnMarkerInfoList;
+
+    KFGRI = DGameReplicationInfo(WorldInfo.GRI);
+    if ( KFGRI == none || KFGRI.SpawningActive == false )
+    {
+        return;
+    }
 
     ZedSlotsAvailable = SpawnManager.GetMaxMonsters() - SpawnManager.GetAIAliveCount();
 

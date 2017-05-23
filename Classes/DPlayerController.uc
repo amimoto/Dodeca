@@ -122,6 +122,7 @@ static function UpdateMechanismMessages( Actor InteractingActor )
 defaultproperties
 {
     InputClass=class'Dodeca.DPlayerInput'
+    CheatClass=class'Dodeca.DCheatManager'
 }
 
 

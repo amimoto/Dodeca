@@ -14,10 +14,14 @@ var int    KeysList[3];
 // Keep track of the wave specific traders
 var array<DTraderTrigger>   DTraderList;
 
+// Keep track of the status of the spawns
+var bool SpawningActive;
+var string SpawnSquads;
+
 replication
 {
     if ( bNetDirty )
-        KeysList;
+        KeysList, SpawningActive, SpawnSquads;
 }
 
 simulated function RequiredKeyItem(int KeyIndex)
@@ -70,6 +74,18 @@ simulated event bool CanChangePerks()
     return false;
 }
 
+
+simulated function StopZedSpawning()
+{
+    bNetDirty = True;
+    SpawningActive = False;
+}
+
+simulated function StartZedSpawning()
+{
+    bNetDirty = True;
+    SpawningActive = True;
+}
 
 defaultproperties
 {

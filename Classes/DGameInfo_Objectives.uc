@@ -26,6 +26,9 @@ var DAISpawnManager DSpawnManager;
 var bool KillCounterEnabled;
 
 
+var DGameReplicationInfo MyDGRI;
+
+
 /*********************************************************************************************
  * CD Variables
  *********************************************************************************************/
@@ -45,7 +48,7 @@ event PreBeginPlay()
     // FIXME: Decide what to do here.
     GameLength = GL_Normal;
     MyKFGRI.bHidePawnIcons = true;
-
+    MyDGRI = DGameReplicationInfo(MyKFGRI);
 }
 
 event PostBeginPlay()
@@ -157,13 +160,19 @@ function StartCountingZedKills()
     KillCounterEnabled = true;
 }
 
-// Prevents the system from spawning new Zeds
+// Control the ZedSpawning
+function ConfigureZedSpawning()
+{
+}
+
 function StopZedSpawning()
 {
+    MyDGRI.StopZedSpawning();
 }
 
 function StartZedSpawning()
 {
+    MyDGRI.StartZedSpawning();
 }
 
 // This huge function that was extracted allows us to manipulate how

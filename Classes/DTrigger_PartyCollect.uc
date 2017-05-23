@@ -156,12 +156,22 @@ simulated event Touch(Actor Other,
                         vector HitNormal)
 {
     Super.Touch(Other, OtherComp, HitLocation, HitNormal);
+    if ( DPawn_Human(Other) == none )
+    {
+        return;
+    }
+
     BroadcastStatus();
 }
 
 simulated event UnTouch(Actor Other)
 {
     super.UnTouch( Other );
+    if ( DPawn_Human(Other) == none )
+    {
+        return;
+    }
+
     if ( AnyPlayersPresent( Other ) )
     {
         BroadcastStatus( Other );
